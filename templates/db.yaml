@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sugarizer-deployment-db-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+      school: {{required "schoolShortName not defined" .Values.schoolShortName}}
+  template:
+    metadata:
+      labels:
+        app: db
+        school: {{required "schoolShortName not defined" .Values.schoolShortName}}
+    spec:
+      containers:
+      - name: sugarizer-db-{{required "schoolShortName not defined" .Values.schoolShortName}}
+        image: mongo
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: sugarizer-db-data-{{required "schoolShortName not defined" .Values.schoolShortName}}
+          mountPath: "/data/db"
+      volumes:
+      - name: sugarizer-db-data-{{required "schoolShortName not defined" .Values.schoolShortName}}
+        persistentVolumeClaim: 
+          claimName: sugarizer-disk-{{required "schoolShortName not defined" .Values.schoolShortName}}
