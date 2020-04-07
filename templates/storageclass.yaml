@@ -19,7 +19,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: sugarizer-slow-storage-{{required "schoolShortName not defined" .Values.schoolShortName}}
   local:
-    path: /home/nikhil/kube_shared
+    path: {{required "storagePath not defined" .Values.storagePath}}
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -27,7 +27,7 @@ spec:
         - key: kubernetes.io/hostname
           operator: In
           values:
-          - ubuntu
+          - {{required "nodeName not defined" .Values.nodeName}}
 
 ---
 

@@ -1,2 +1,4 @@
 schoolShortName: nik-school
 hostName: sugarizer.example.com
+storagePath: /home/nikhil/kube_shared
+nodeName: ubuntu
