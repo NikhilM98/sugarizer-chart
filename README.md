@@ -109,3 +109,7 @@ You can deploy multiple Sugarizer Server instances by editing the values of the 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
+## License
+This project is licensed under `Apache v2` License. See [LICENSE](LICENSE) for full license text.
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
