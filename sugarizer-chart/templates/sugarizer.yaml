@@ -29,6 +29,8 @@ spec:
       containers:
       - name: sugarizer-http
         image: nikhilm98/sugarizer-server
+        command: ["/bin/sh"]
+        args: ["-c", "nohup node sugarizer.js > /opt/sugarizer.log & sleep 10; sh add-admin.sh {{required "admin not defined" .Values.admin}} {{required "password not defined" .Values.password}} http://127.0.0.1:8080/auth/signup; tail -f /opt/sugarizer.log;"]
         volumeMounts:
         - name: env
           mountPath: "/opt/sugarizer-server/env"

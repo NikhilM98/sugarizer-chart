@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sugarizer-db-deployment
+  namespace: sugarizer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sugarizer-db
+  template:
+    metadata:
+      labels:
+        app: sugarizer-db
+    spec:
+      containers:
+      - name: sugarizer-mongo
+        image: mongo
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: sugarizer-db-data
+          mountPath: "/data/db"
+      volumes:
+      - name: sugarizer-db-data
+        persistentVolumeClaim: 
+          claimName: sugarizer-disk

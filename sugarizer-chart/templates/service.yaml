@@ -31,19 +31,3 @@ spec:
       protocol: TCP
 
 ---
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: sugarizer-service-db-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
-spec:
-  selector:
-    school: {{required "schoolShortName not defined" .Values.schoolShortName}}
-    app: db
-  ports:
-    - port: 27017
-      targetPort: 27017
-      protocol: TCP
-
----
