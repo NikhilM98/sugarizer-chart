@@ -67,12 +67,10 @@ metrics:
   enabled: false
   image:
     repository: bitnami/mongodb-exporter
-    tag: 0.10.0-debian-9-r71
+    tag: 0.11.0
     pullPolicy: IfNotPresent
   port: 9216
   path: "/metrics"
-  socketTimeout: 3s
-  syncTimeout: 1m
   prometheusServiceDiscovery: true
   resources: {}
   securityContext:
@@ -141,10 +139,10 @@ persistentVolume:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "microk8s-hostpath"
+  storageClass: ""
   accessModes:
     - ReadWriteOnce
-  size: 10Gi
+  size: 1Gi
   annotations: {}
 
 # Annotations to be added to the secrets
