@@ -1,4 +1,3 @@
-schoolShortName: nik-school
-hostName: sugarizer.example.com
-databaseUrl: mymongodb-mongodb-replicaset-0.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017,mymongodb-mongodb-replicaset-1.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017,mymongodb-mongodb-replicaset-2.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017
+schoolShortName: mohayon-school
+databaseUrl: sugarizerdb-mongodb-replicaset-0.sugarizerdb-mongodb-replicaset.default.svc.cluster.local:27017,sugarizerdb-mongodb-replicaset-1.sugarizerdb-mongodb-replicaset.default.svc.cluster.local:27017,sugarizerdb-mongodb-replicaset-2.sugarizerdb-mongodb-replicaset.default.svc.cluster.local:27017
 replicaset: true
