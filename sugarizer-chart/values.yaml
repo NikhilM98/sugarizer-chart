@@ -1,4 +1,4 @@
 schoolShortName: nik-school
 hostName: sugarizer.example.com
-admin: admin
-password: password
+databaseUrl: mymongodb-mongodb-replicaset-0.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017,mymongodb-mongodb-replicaset-1.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017,mymongodb-mongodb-replicaset-2.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017
+replicaset: true
