@@ -1,2 +1,3 @@
 storagePath: /home/nikhil/kube_shared
 nodeName: ubuntu
+replicas: 1

@@ -2,32 +2,9 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: sugarizer-slow-storage
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
-
----
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: sugarizer-pv
-spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: sugarizer-slow-storage
-  local:
-    path: {{required "storagePath not defined" .Values.storagePath}}
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - {{required "nodeName not defined" .Values.nodeName}}
+provisioner: microk8s.io/hostpath
+volumeBindingMode: Immediate
+reclaimPolicy: Retain
 
 ---
 

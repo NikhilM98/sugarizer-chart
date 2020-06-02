@@ -4,7 +4,7 @@ metadata:
   name: sugarizer-db-deployment
   namespace: sugarizer
 spec:
-  replicas: 1
+  replicas: {{required "replicas not defined" .Values.replicas}}
   selector:
     matchLabels:
       app: sugarizer-db
