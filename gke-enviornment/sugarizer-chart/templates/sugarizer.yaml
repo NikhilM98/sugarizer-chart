@@ -37,5 +37,3 @@ spec:
       - name: env
         secret:
           secretName: sugarizer-env
-
----
