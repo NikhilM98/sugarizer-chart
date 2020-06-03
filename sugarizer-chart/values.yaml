@@ -1,3 +1,0 @@
-schoolShortName: mohayon-school
-databaseUrl: sugarizerdb-mongodb-replicaset-0.sugarizerdb-mongodb-replicaset.default.svc.cluster.local:27017,sugarizerdb-mongodb-replicaset-1.sugarizerdb-mongodb-replicaset.default.svc.cluster.local:27017,sugarizerdb-mongodb-replicaset-2.sugarizerdb-mongodb-replicaset.default.svc.cluster.local:27017
-replicaset: true
