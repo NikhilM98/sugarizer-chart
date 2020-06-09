@@ -36,7 +36,6 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: {{required "letsEncryptEmail not defined" .Values.letsEncryptEmail}}
     privateKeySecretRef:
       name: sugarizer-acme-pk-{{required "schoolShortName not defined" .Values.schoolShortName}}
     solvers:
