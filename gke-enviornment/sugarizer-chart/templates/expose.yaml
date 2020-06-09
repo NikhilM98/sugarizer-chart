@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Secret
+data:
+  key.json: {{required "clouddns not defined" .Values.clouddns}}
+metadata:
+  name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+type: Opaque
+
+---
+
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: sugarizer-service-db-np-{{required "schoolShortName not defined" .Values.schoolShortName}}
+spec:
+  policyTypes:
+  - Ingress
+  - Egress
+  podSelector:
+    matchLabels:
+      school: {{required "schoolShortName not defined" .Values.schoolShortName}}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          school: {{required "schoolShortName not defined" .Values.schoolShortName}}
+
+---
+
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{required "letsEncryptEmail not defined" .Values.letsEncryptEmail}}
+    privateKeySecretRef:
+      name: sugarizer-acme-pk-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    solvers:
+    - dns01:
+        clouddns:
+          project: {{required "gcpProjectId not defined" .Values.gcpProjectId}}
+          serviceAccountSecretRef:
+            name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+            key: key.json
+
+---
+
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: sugarizer-cert-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+spec:
+  dnsNames: 
+    - {{required "hostName not defined" .Values.hostName}}
+  secretName: https-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  issuerRef:
+    name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
+
+---
+
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: sugarizer-vs-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+spec:
+  tls:
+    secret: https-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  host: {{required "hostName not defined" .Values.hostName}}
+  upstreams:
+  - name: web
+    service: sugarizer-service-server-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    port: 80
+  - name: ws
+    service: sugarizer-service-ws-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    port: 8039
+  routes:
+  - path: /
+    matches:
+    - conditions:
+      - header: Upgrade
+        value: websocket
+      action:
+        pass: ws
+    action:
+      pass: web

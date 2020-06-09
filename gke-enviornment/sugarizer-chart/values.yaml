@@ -1,3 +1,7 @@
 schoolShortName: nik-school
+hostName: try.sugarizer.tools
 databaseUrl: mymongodb
 replicaset: true
+letsEncryptEmail: mail@example.com
+gcpProjectId: mohayon-experiments
+clouddns: yourCloudDnsKeyInBase64
