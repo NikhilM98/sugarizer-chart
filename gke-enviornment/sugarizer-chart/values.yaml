@@ -2,5 +2,4 @@ schoolShortName: nik-school
 hostName: try.sugarizer.tools
 databaseUrl: mymongodb
 replicaset: true
-gcpProjectId: mohayon-experiments
-clouddns: yourCloudDnsKeyInBase64
+sspNamespace: schoolportal

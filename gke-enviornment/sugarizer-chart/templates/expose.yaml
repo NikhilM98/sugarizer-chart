@@ -1,11 +1,15 @@
 apiVersion: v1
 kind: Secret
-data:
-  key.json: {{required "clouddns not defined" .Values.clouddns}}
 metadata:
-  name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  name: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
   namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
-type: Opaque
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflects: '{{required "sspNamespace not defined" .Values.sspNamespace}}/https-secret-{{required "sspNamespace not defined" .Values.sspNamespace}}'
+type: kubernetes.io/tls
+data:
+  ca.crt: ""
+  tls.crt: ""
+  tls.key: ""
 
 ---
 
@@ -28,40 +32,6 @@ spec:
 
 ---
 
-apiVersion: cert-manager.io/v1alpha2
-kind: Issuer
-metadata:
-  name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
-spec:
-  acme:
-    server: https://acme-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      name: sugarizer-acme-pk-{{required "schoolShortName not defined" .Values.schoolShortName}}
-    solvers:
-    - dns01:
-        clouddns:
-          project: {{required "gcpProjectId not defined" .Values.gcpProjectId}}
-          serviceAccountSecretRef:
-            name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
-            key: key.json
-
----
-
-apiVersion: cert-manager.io/v1alpha2
-kind: Certificate
-metadata:
-  name: sugarizer-cert-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
-spec:
-  dnsNames: 
-    - {{required "hostName not defined" .Values.hostName}}
-  secretName: https-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  issuerRef:
-    name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
-
----
-
 apiVersion: k8s.nginx.org/v1
 kind: VirtualServer
 metadata:
@@ -69,7 +39,7 @@ metadata:
   namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
 spec:
   tls:
-    secret: https-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    secret: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
   host: {{required "hostName not defined" .Values.hostName}}
   upstreams:
   - name: web
