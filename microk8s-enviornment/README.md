@@ -42,14 +42,26 @@ Metallb will ask for an IP address range. The IPs should be on the same network 
 
 
 ### Install NGINX Ingress Controller
-NGINX Ingress Controller can be installed by running these commands:
-```bash
-# Add NGINX Helm repository.
-helm repo add nginx-stable https://helm.nginx.com/stable
-helm repo update
+The [NGINX Ingress Controller](https://github.com/nginxinc/kubernetes-ingress/) provides an implementation of an Ingress controller for NGINX and NGINX Plus.
 
-# Install the chart with the release name my-release (my-release is the name that you choose).
-helm install my-release nginx-stable/nginx-ingress
+The Ingress is a Kubernetes resource that lets you configure an HTTP load balancer for applications running on Kubernetes, represented by one or more Services. Such a load balancer is necessary to deliver those applications to clients outside of the Kubernetes cluster.
+
+Clone the chart repository:
+```bash
+git clone https://github.com/nginxinc/kubernetes-ingress/
+cd deployments/helm-chart/
+```
+Open the `values.yaml` file and add these `customPorts` under `controller.service.customPorts`:
+```bash
+customPorts:
+  - port: 8039
+    targetPort: http
+    protocol: TCP
+    name: presence
+```
+Install the chart with the release name nginx-ingress (You can change the release name)
+```bash
+helm install nginx-ingress .
 ```
 After installing the controller, edit the `/etc/hosts` to point the hosts (domain name) to the External IP of the NGINX Ingress Controller. You can find the External IP by running:
 ```bash
