@@ -6,7 +6,7 @@ If you don't have a [GKE](https://cloud.google.com/kubernetes-engine) cluster se
 
 ### Install MongoDB-Replicaset
 You can install MongoDB-Replicaset using [MongoDB-Replicaset](https://github.com/helm/charts/tree/master/stable/mongodb-replicaset) Helm Chart.  
-You should use the values in [gke-enviornment/mongo-chart/values.yaml](mongo-chart/values.yaml) file as the values file.  
+You should use the values in [gke-environment/mongo-chart/values.yaml](mongo-chart/values.yaml) file as the values file.  
 MongoDB-Replicaset can be installed by following these commands:
 ```bash
 # Add Chart Repository
@@ -15,7 +15,7 @@ helm repo update
 
 # Install the chart with the release name mymongodb (You can change the release name)
 # mongo-chart/values.yaml is the location of the YAML file containing values.
-# You should use gke-enviornment/mongo-chart/values.yaml as the values file.
+# You should use gke-environment/mongo-chart/values.yaml as the values file.
 helm install mymongodb -f mongo-chart/values.yaml stable/mongodb-replicaset
 ``` 
 
@@ -106,7 +106,7 @@ Set to none if you intend use Sugarizer Chart independent of Sugarizer School Po
 ### Install Chart Using Helm
 Go into chart directory and run:
 ```bash
-helm install <chart-name> gke-enviornment/sugarizer-chart/
+helm install <chart-name> gke-environment/sugarizer-chart/
 ```
 Where `<chart-name>` is the name you want to give to this chart.
 

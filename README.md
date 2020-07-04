@@ -3,8 +3,8 @@
 
 ## Provider Support
 Sugarizer Chart supports two providers:
-- [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (GKE) - [README](gke-enviornment/README.md)
-- [Microk8s](https://microk8s.io) (It basically provides a bare-metal Kubernetes cluster) - [README](microk8s-enviornment/README.md)
+- [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (GKE) - [README](gke-environment/README.md)
+- [Microk8s](https://microk8s.io) (It basically provides a bare-metal Kubernetes cluster) - [README](microk8s-environment/README.md)
 
 Each provider has its folder in this repository. You can follow the steps in the README.md inside the folder to set-up a working environment for Sugarizer Chart.
 

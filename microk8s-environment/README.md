@@ -80,7 +80,7 @@ Add `<External IP> <Host>` pairs at the end of the file.
 
 ### Install MongoDB-Replicaset
 You can install MongoDB-Replicaset using [MongoDB-Replicaset](https://github.com/helm/charts/tree/master/stable/mongodb-replicaset) Helm Chart.  
-You should use the values in [microk8s-enviornment/mongo-chart/values.yaml](mongo-chart/values.yaml) file as the values file.  
+You should use the values in [microk8s-environment/mongo-chart/values.yaml](mongo-chart/values.yaml) file as the values file.  
 MongoDB-Replicaset can be installed by following these commands:
 ```bash
 # Add Chart Repository
@@ -89,7 +89,7 @@ helm repo update
 
 # Install the chart with the release name mymongodb (You can change the release name)
 # mongo-chart/values.yaml is the location of the YAML file containing values.
-# You should use microk8s-enviornment/mongo-chart/values.yaml as the values file.
+# You should use microk8s-environment/mongo-chart/values.yaml as the values file.
 helm install mymongodb -f mongo-chart/values.yaml stable/mongodb-replicaset
 ``` 
 
@@ -115,7 +115,7 @@ Open [values.yaml](sugarizer-chart/values.yaml) and edit the default values.
 ### Install Chart Using Helm
 Go into chart directory and run:
 ```bash
-helm install <chart-name> microk8s-enviornment/sugarizer-chart/
+helm install <chart-name> microk8s-environment/sugarizer-chart/
 ```
 Where `<chart-name>` is the name you want to give to this chart.
 
