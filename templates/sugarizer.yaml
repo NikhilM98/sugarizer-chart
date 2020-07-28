@@ -4,7 +4,7 @@ data:
   sugarizer.ini: {{(tpl (.Files.Get "sugarizer.ini") .) | b64enc}}
 metadata:
   name: sugarizer-env
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
 type: Opaque
 
 ---
@@ -12,19 +12,19 @@ type: Opaque
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sugarizer-deployment-server-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+  name: sugarizer-deployment-server-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: http
-      school: {{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+      school: {{required "schoolShortName not defined" .Values.schoolShortName}}
   template:
     metadata:
       labels:
         app: http
-        school: {{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+        school: {{required "schoolShortName not defined" .Values.schoolShortName}}
     spec:
       containers:
       - name: sugarizer-http
