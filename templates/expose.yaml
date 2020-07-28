@@ -1,19 +1,19 @@
-{{- if and (eq .Values.https true) (ne .Values.provider "microk8s") }}
+{{- if and (eq .Values.deployment.https true) (ne .Values.cluster.provider "microk8s") }}
 # If https is set to true and provider is not microk8s then enable https certificate
 
-{{- if eq .Values.sspNamespace "none" }}
+{{- if eq .Values.deployment.sspNamespace "none" }}
 # If sspNamespace is not present then generate certificate using cert-manager
 apiVersion: v1
 kind: Secret
 data:
-  {{- if eq .Values.provider "gke" }}
-  key.json: {{required "clouddns not defined" .Values.clouddns}}
-  {{- else if eq .Values.provider "azure" }}
-  key.json: {{required "azureClientSecret not defined" .Values.azureClientSecret | b64enc}}
+  {{- if eq .Values.cluster.provider "gke" }}
+  key.json: {{required "gcpServiceAccount not defined" .Values.cluster.gcpServiceAccount}}
+  {{- else if eq .Values.cluster.provider "azure" }}
+  key.json: {{required "azureClientSecret not defined" .Values.cluster.azureClientSecret | b64enc}}
   {{- end }}
 metadata:
-  name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  name: clouddns-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
 type: Opaque
 
 ---
@@ -21,33 +21,33 @@ type: Opaque
 apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
-  name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
 spec:
   acme:
     # server: https://acme-v02.api.letsencrypt.org/directory
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: sugarizer-acme-pk-{{required "schoolShortName not defined" .Values.schoolShortName}}
+      name: sugarizer-acme-pk-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
     solvers:
-    {{- if eq .Values.provider "gke" }}
+    {{- if eq .Values.cluster.provider "gke" }}
     - dns01:
         clouddns:
-          project: {{required "gcpProjectId not defined" .Values.gcpProjectId}}
+          project: {{required "gcpProjectId not defined" .Values.cluster.gcpProjectId}}
           serviceAccountSecretRef:
-            name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+            name: clouddns-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
             key: key.json
-    {{- else if eq .Values.provider "azure" }}
+    {{- else if eq .Values.cluster.provider "azure" }}
     - dns01:
         azuredns:
-          clientID: {{required "azureSPAppId not defined" .Values.azureSPAppId}}
+          clientID: {{required "azureSPAppId not defined" .Values.cluster.azureSPAppId}}
           clientSecretSecretRef:
-            name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+            name: clouddns-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
             key: key.json
-          subscriptionID: {{required "azureSubscriptionId not defined" .Values.azureSubscriptionId}}
-          tenantID: {{required "azureTenantId not defined" .Values.azureTenantId}}
-          resourceGroupName: {{required "azureDnsZoneResourceGroup not defined" .Values.azureDnsZoneResourceGroup}}
-          hostedZoneName: {{required "azureDnsZone not defined" .Values.azureDnsZone}}
+          subscriptionID: {{required "azureSubscriptionId not defined" .Values.cluster.azureSubscriptionId}}
+          tenantID: {{required "azureTenantId not defined" .Values.cluster.azureTenantId}}
+          resourceGroupName: {{required "azureDnsZoneResourceGroup not defined" .Values.cluster.azureDnsZoneResourceGroup}}
+          hostedZoneName: {{required "azureDnsZone not defined" .Values.cluster.azureDnsZone}}
           environment: AzurePublicCloud
     {{- end }}
 
@@ -56,23 +56,23 @@ spec:
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: sugarizer-cert-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  name: sugarizer-cert-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
 spec:
   dnsNames: 
-    - {{required "hostName not defined" .Values.hostName}}
-  secretName: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    - {{required "hostName not defined" .Values.deployment.hostName}}
+  secretName: https-mirror-secret-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
   issuerRef:
-    name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
 {{- else }}
 # Else use same certificate as Sugarizer School Portal
 apiVersion: v1
 kind: Secret
 metadata:
-  name: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  name: https-mirror-secret-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
   annotations:
-    reflector.v1.k8s.emberstack.com/reflects: '{{required "sspNamespace not defined" .Values.sspNamespace}}/https-secret-{{required "sspNamespace not defined" .Values.sspNamespace}}'
+    reflector.v1.k8s.emberstack.com/reflects: '{{required "sspNamespace not defined" .Values.deployment.sspNamespace}}/https-secret-{{required "sspNamespace not defined" .Values.deployment.sspNamespace}}'
 type: kubernetes.io/tls
 data:
   ca.crt: ""
@@ -86,39 +86,39 @@ data:
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: sugarizer-service-db-np-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  name: sugarizer-service-db-np-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
 spec:
   policyTypes:
   - Ingress
   - Egress
   podSelector:
     matchLabels:
-      school: {{required "schoolShortName not defined" .Values.schoolShortName}}
+      school: {{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
   ingress:
   - from:
     - podSelector:
         matchLabels:
-          school: {{required "schoolShortName not defined" .Values.schoolShortName}}
+          school: {{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
 
 ---
 
 apiVersion: k8s.nginx.org/v1
 kind: VirtualServer
 metadata:
-  name: sugarizer-vs-{{required "schoolShortName not defined" .Values.schoolShortName}}
-  namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  name: sugarizer-vs-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
+  namespace: sugarizer-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
 spec:
-  {{- if and (eq .Values.https true) (ne .Values.provider "microk8s") }}
+  {{- if and (eq .Values.deployment.https true) (ne .Values.cluster.provider "microk8s") }}
   tls:
-    secret: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    secret: https-mirror-secret-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
   {{- end }}
-  host: {{required "hostName not defined" .Values.hostName}}
+  host: {{required "hostName not defined" .Values.deployment.hostName}}
   upstreams:
   - name: web
-    service: sugarizer-service-server-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    service: sugarizer-service-server-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
     port: 80
   - name: ws
-    service: sugarizer-service-ws-{{required "schoolShortName not defined" .Values.schoolShortName}}
+    service: sugarizer-service-ws-{{required "schoolShortName not defined" .Values.deployment.schoolShortName}}
     port: 8039
   routes:
   - path: /
