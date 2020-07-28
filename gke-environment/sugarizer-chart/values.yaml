@@ -12,3 +12,4 @@ azureSubscriptionId: azureSubscriptionId
 azureTenantId: azureTenantId
 azureDnsZoneResourceGroup: azureDnsZoneResourceGroup
 azureDnsZone: azureDnsZone
+https: true

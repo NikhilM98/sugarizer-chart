@@ -1,4 +1,8 @@
+{{- if and (eq .Values.https true) (ne .Values.provider "microk8s") }}
+# If https is set to true and provider is not microk8s then enable https certificate
+
 {{- if eq .Values.sspNamespace "none" }}
+# If sspNamespace is not present then generate certificate using cert-manager
 apiVersion: v1
 kind: Secret
 data:
@@ -61,6 +65,7 @@ spec:
   issuerRef:
     name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
 {{- else }}
+# Else use same certificate as Sugarizer School Portal
 apiVersion: v1
 kind: Secret
 metadata:
@@ -76,6 +81,7 @@ data:
 {{- end }}
 
 ---
+{{- end }}
 
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -102,8 +108,10 @@ metadata:
   name: sugarizer-vs-{{required "schoolShortName not defined" .Values.schoolShortName}}
   namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
 spec:
+  {{- if and (eq .Values.https true) (ne .Values.provider "microk8s") }}
   tls:
     secret: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  {{- end }}
   host: {{required "hostName not defined" .Values.hostName}}
   upstreams:
   - name: web
