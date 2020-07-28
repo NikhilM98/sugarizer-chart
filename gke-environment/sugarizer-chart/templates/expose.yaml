@@ -2,7 +2,11 @@
 apiVersion: v1
 kind: Secret
 data:
+  {{- if eq .Values.provider "gke" }}
   key.json: {{required "clouddns not defined" .Values.clouddns}}
+  {{- else if eq .Values.provider "azure" }}
+  key.json: {{required "azureClientSecret not defined" .Values.azureClientSecret | b64enc}}
+  {{- end }}
 metadata:
   name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
   namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
@@ -22,12 +26,26 @@ spec:
     privateKeySecretRef:
       name: sugarizer-acme-pk-{{required "schoolShortName not defined" .Values.schoolShortName}}
     solvers:
+    {{- if eq .Values.provider "gke" }}
     - dns01:
         clouddns:
           project: {{required "gcpProjectId not defined" .Values.gcpProjectId}}
           serviceAccountSecretRef:
             name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
             key: key.json
+    {{- else if eq .Values.provider "azure" }}
+    - dns01:
+        azuredns:
+          clientID: {{required "azureSPAppId not defined" .Values.azureSPAppId}}
+          clientSecretSecretRef:
+            name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+            key: key.json
+          subscriptionID: {{required "azureSubscriptionId not defined" .Values.azureSubscriptionId}}
+          tenantID: {{required "azureTenantId not defined" .Values.azureTenantId}}
+          resourceGroupName: {{required "azureDnsZoneResourceGroup not defined" .Values.azureDnsZoneResourceGroup}}
+          hostedZoneName: {{required "azureDnsZone not defined" .Values.azureDnsZone}}
+          environment: AzurePublicCloud
+    {{- end }}
 
 ---
 
@@ -39,7 +57,7 @@ metadata:
 spec:
   dnsNames: 
     - {{required "hostName not defined" .Values.hostName}}
-  secretName: https-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  secretName: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
   issuerRef:
     name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
 {{- else }}
