@@ -1,12 +1,14 @@
 # Sugarizer Chart
 [Helm](https://helm.sh/) Chart for setting up [Sugarizer-Server](https://github.com/llaske/sugarizer-server) deployment on a [Kubernetes](https://kubernetes.io/) cluster.
 
+## Usage
+You can deploy multiple Sugarizer Server instances by editing the values of the YAML file and running simple `helm install` command. The Sugarizer Server instance can be accessed by the browser by opening the hostName URL. 
+
 ## Provider Support
 Sugarizer Chart supports three providers:
 - [Azure Kubernetes Service](https://azure.microsoft.com/en-in/services/kubernetes-service/) (AKS)
 - [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (GKE)
 - [Microk8s](https://microk8s.io) (It basically provides a bare-metal Kubernetes cluster)
-
 
 **Note:** You can use Sugarizer Chart as an independent deployment or use it with [Sugarizer School Portal Chart](https://github.com/nikhilm98/sugarizer-school-portal-chart/) to issue dynamic deployments.
 - If you want to use Sugarizer Chart with Sugarizer School Portal Chart then set `sspNamespace` as the namespace of Sugarizer School Portal Chart. In this case, same TLS Certificate for HTTPS will be used as in Sugarizer School Portal Deployment. You don't need to configure `cluster` in the `values.yaml` file in this case.
@@ -191,7 +193,7 @@ git clone https://github.com/NikhilM98/sugarizer-chart.git
 ```
 
 ### Edit Default Values
-Open [values.yaml](sugarizer-chart/values.yaml) and edit the default values.
+Open [values.yaml](values.yaml) and edit the default values.
 
 **[schoolShortName] -**
 Kubernetes [Namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) for the chart.
@@ -236,9 +238,6 @@ helm install <chart-name> .
 Where `<chart-name>` is the name you want to give to this chart.
 
 After roughly 2 minutes, the Sugarizer-Server instance will be available on the `hostName` URL.
-
-## Usage
-You can deploy multiple Sugarizer Server instances by editing the values of the YAML file and running simple `helm install` command. The Sugarizer Server instance can be accessed by the browser by opening the hostName URL. 
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
