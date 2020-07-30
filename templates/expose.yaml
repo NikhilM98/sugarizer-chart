@@ -1,8 +1,16 @@
-{{- if eq .Values.sspNamespace "none" }}
+{{- if and (eq .Values.deployment.https true) (ne .Values.cluster.provider "microk8s") }}
+# If https is set to true and provider is not microk8s then enable https certificate
+
+{{- if eq .Values.deployment.sspNamespace "none" }}
+# If sspNamespace is not present then generate certificate using cert-manager
 apiVersion: v1
 kind: Secret
 data:
-  key.json: {{required "clouddns not defined" .Values.clouddns}}
+  {{- if eq .Values.cluster.provider "gke" }}
+  key.json: {{required "gcpServiceAccount not defined" .Values.cluster.gcpServiceAccount}}
+  {{- else if eq .Values.cluster.provider "azure" }}
+  key.json: {{required "azureClientSecret not defined" .Values.cluster.azureClientSecret | b64enc}}
+  {{- end }}
 metadata:
   name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
   namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
@@ -22,12 +30,26 @@ spec:
     privateKeySecretRef:
       name: sugarizer-acme-pk-{{required "schoolShortName not defined" .Values.schoolShortName}}
     solvers:
+    {{- if eq .Values.cluster.provider "gke" }}
     - dns01:
         clouddns:
-          project: {{required "gcpProjectId not defined" .Values.gcpProjectId}}
+          project: {{required "gcpProjectId not defined" .Values.cluster.gcpProjectId}}
           serviceAccountSecretRef:
             name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
             key: key.json
+    {{- else if eq .Values.cluster.provider "azure" }}
+    - dns01:
+        azuredns:
+          clientID: {{required "azureSPAppId not defined" .Values.cluster.azureSPAppId}}
+          clientSecretSecretRef:
+            name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+            key: key.json
+          subscriptionID: {{required "azureSubscriptionId not defined" .Values.cluster.azureSubscriptionId}}
+          tenantID: {{required "azureTenantId not defined" .Values.cluster.azureTenantId}}
+          resourceGroupName: {{required "azureDnsZoneResourceGroup not defined" .Values.cluster.azureDnsZoneResourceGroup}}
+          hostedZoneName: {{required "azureDnsZone not defined" .Values.cluster.azureDnsZone}}
+          environment: AzurePublicCloud
+    {{- end }}
 
 ---
 
@@ -39,17 +61,18 @@ metadata:
 spec:
   dnsNames: 
     - {{required "hostName not defined" .Values.hostName}}
-  secretName: https-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  secretName: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
   issuerRef:
     name: sugarizer-letsencrypt-{{required "schoolShortName not defined" .Values.schoolShortName}}
 {{- else }}
+# Else use same certificate as Sugarizer School Portal
 apiVersion: v1
 kind: Secret
 metadata:
   name: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
   namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
   annotations:
-    reflector.v1.k8s.emberstack.com/reflects: '{{required "sspNamespace not defined" .Values.sspNamespace}}/https-secret-{{required "sspNamespace not defined" .Values.sspNamespace}}'
+    reflector.v1.k8s.emberstack.com/reflects: '{{required "sspNamespace not defined" .Values.deployment.sspNamespace}}/https-secret-{{required "sspNamespace not defined" .Values.deployment.sspNamespace}}'
 type: kubernetes.io/tls
 data:
   ca.crt: ""
@@ -58,6 +81,7 @@ data:
 {{- end }}
 
 ---
+{{- end }}
 
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -84,8 +108,10 @@ metadata:
   name: sugarizer-vs-{{required "schoolShortName not defined" .Values.schoolShortName}}
   namespace: sugarizer-{{required "schoolShortName not defined" .Values.schoolShortName}}
 spec:
+  {{- if and (eq .Values.deployment.https true) (ne .Values.cluster.provider "microk8s") }}
   tls:
     secret: https-mirror-secret-{{required "schoolShortName not defined" .Values.schoolShortName}}
+  {{- end }}
   host: {{required "hostName not defined" .Values.hostName}}
   upstreams:
   - name: web

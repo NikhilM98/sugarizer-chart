@@ -33,6 +33,12 @@ spec:
         - name: env
           mountPath: "/opt/sugarizer-server/env"
           readOnly: true
+        readinessProbe:
+          httpGet:
+            path: /api
+            port: 8080
+          failureThreshold: 1
+          periodSeconds: 30
       volumes:
       - name: env
         secret:

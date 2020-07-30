@@ -1,7 +1,0 @@
-schoolShortName: nik-school
-hostName: try.sugarizer.tools
-databaseUrl: mymongodb
-replicaset: true
-sspNamespace: schoolportal # Set to none if you plan to use this independent of sugarizer school portal
-gcpProjectId: gcpProjectId # Set only if sspNamespace is set to none
-clouddns: yourCloudDnsKeyInBase64 # Set only if sspNamespace is set to none
