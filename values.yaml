@@ -1,5 +1,5 @@
-schoolShortName: nik-school-lol
-hostName: lol.azure.sugarizer.tools
+schoolShortName: nik-school
+hostName: sugarizer.tools
 deployment:
     sspNamespace: none # Set to none if you plan to use Sugarizer Chart independent of Sugarizer School Portal
     https: true # HTTPs won't work on microk8s
@@ -7,7 +7,7 @@ database:
     databaseUrl: mymongodb
     replicaset: true
 cluster: # Not required if HTTPS is false. Required only if you plan to use Sugarizer Chart independent of Sugarizer School Portal
-    provider: azure # Options: gke, azure, microk8s
+    provider: aws # Options: gke, azure, aws, microk8s
     # If provider is gke
     gcpProjectId: null
     gcpServiceAccount: null
@@ -17,4 +17,10 @@ cluster: # Not required if HTTPS is false. Required only if you plan to use Suga
     azureSubscriptionId: null
     azureTenantId: null
     azureDnsZoneResourceGroup: null
-    azureDnsZone: azure.sugarizer.tools
+    azureDnsZone: null
+    # If provider is aws
+    awsClientSecret: null
+    awsRegion: null
+    awsAccessKeyId: null
+    awsDnsZone: null
+    awsRole: null

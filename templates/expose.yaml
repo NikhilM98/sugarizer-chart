@@ -10,6 +10,8 @@ data:
   key.json: {{required "gcpServiceAccount not defined" .Values.cluster.gcpServiceAccount}}
   {{- else if eq .Values.cluster.provider "azure" }}
   key.json: {{required "azureClientSecret not defined" .Values.cluster.azureClientSecret | b64enc}}
+  {{- else if eq .Values.cluster.provider "aws" }}
+  key.json: {{required "awsClientSecret not defined" .Values.cluster.awsClientSecret | b64enc}}
   {{- end }}
 metadata:
   name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
@@ -49,8 +51,21 @@ spec:
           resourceGroupName: {{required "azureDnsZoneResourceGroup not defined" .Values.cluster.azureDnsZoneResourceGroup}}
           hostedZoneName: {{required "azureDnsZone not defined" .Values.cluster.azureDnsZone}}
           environment: AzurePublicCloud
+    {{- else if eq .Values.cluster.provider "aws" }}
+    - selector:
+        dnsZones:
+          - {{required "awsDnsZone not defined" .Values.cluster.awsDnsZone}}
+      dns01:
+        route53:
+          region: {{required "awsRegion not defined" .Values.cluster.awsRegion}}
+          accessKeyID: {{required "awsAccessKeyId not defined" .Values.cluster.awsAccessKeyId}}
+          secretAccessKeySecretRef:
+            name: clouddns-{{required "schoolShortName not defined" .Values.schoolShortName}}
+            key: key.json
+          {{- if .Values.cluster.awsRole }}
+          role: {{.Values.cluster.awsRole}}
+          {{- end }}
     {{- end }}
-
 ---
 
 apiVersion: cert-manager.io/v1alpha2

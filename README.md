@@ -6,6 +6,7 @@ You can deploy multiple Sugarizer Server instances by editing the values of the 
 
 ## Provider Support
 Sugarizer Chart supports three providers:
+- [Amazon Elastic Kubernetes Service](https://aws.amazon.com/eks/) (Amazon EKS)
 - [Azure Kubernetes Service](https://azure.microsoft.com/en-in/services/kubernetes-service/) (AKS)
 - [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (GKE)
 - [Microk8s](https://microk8s.io) (It basically provides a bare-metal Kubernetes cluster)
@@ -20,7 +21,7 @@ Sugarizer Chart supports three providers:
 If you don't have a Kubernetes cluster set-up, you can follow these steps to set-up a working environment.
 
 ### Install Microk8s
-**Note:** Not required if you have access to AKS or GKE.
+**Note:** Not required if you have access to Amazon EKS, AKS or GKE.
 
 You can follow MicroK8s [documentation](https://microk8s.io/docs/) to install MicroK8s in your system. MicroK8s can be installed by running these commands:
 ```bash
@@ -68,7 +69,7 @@ helm repo update
 ```
 For AKS or GKE, run following command to install MongoDB-Replicaset:
 ```bash
-# mongodb/default-values.yaml is the location of the YAML file containing configuration for GKE and AKS.
+# mongodb/default-values.yaml is the location of the YAML file containing configuration for Amazon EKS, GKE and AKS.
 helm install mymongodb -f mongodb/default-values.yaml stable/mongodb-replicaset
 ```
 For Microk8s, run following command to install MongoDB-Replicaset:
@@ -109,7 +110,7 @@ cd deployments/helm-chart/
 ```
 Open the `values.yaml` file and add these `customPorts` under `controller.service.customPorts`:
 ```bash
-# For HTTP only support (AKS/GKE/Microk8s)
+# For HTTP only support (AKS/EKS/GKE/Microk8s)
 customPorts:
   - port: 8039
     targetPort: http
@@ -118,7 +119,7 @@ customPorts:
 ```
 Or
 ```bash
-# If you want to have HTTPS support (AKS/GKE + Cloud DNS)
+# If you want to have HTTPS support (AKS/EKS/GKE + Cloud DNS)
 customPorts:
   - port: 8039
     targetPort: https
@@ -134,7 +135,7 @@ After installing the controller, point the hosts (domain name) to the External I
 ```bash
 kubectl get service --all-namespaces
 ```
-- For **AKS/GKE**, point the `A` record of domain to the External IP of the controller.
+- For **AKS/EKS/GKE**, point the `A` record of domain to the External IP of the controller.
 - For **Microk8s**, edit the `/etc/hosts` file by running
   ```bash
   sudo vi /etc/hosts
@@ -180,6 +181,9 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager --versi
 - **AKS:**
 You need to create a Service Principal for Azure. You can follow these [instructions](https://cert-manager.io/docs/configuration/acme/dns01/azuredns/) to create a Service Principal for Azure.
 
+**EKS:**
+You need to use Amazon Route53 as Cloud DNS to allow certificate verification. You can follow these [instructions](https://cert-manager.io/docs/configuration/acme/dns01/route53/) to configure Route53 for AWS. 
+
 - **GKE:**
 You can create a Service Account for GCP by following these [instructions](https://cert-manager.io/docs/configuration/acme/dns01/google/).
 Save the service account key. It will be required in the values.yaml file while chart installation. It'll also be required if you set-up backup and restore using MGOB and intend to use gcloud bucket.
@@ -200,7 +204,7 @@ Kubernetes [Namespace](https://kubernetes.io/docs/concepts/overview/working-with
 
 **[hostName] -**
 The host (domain/subdomain) name from which Sugarizer Server will be accessible. Must be a valid hostname as defined in [RFC 1123](https://tools.ietf.org/html/rfc1123).
-- For **AKS** or **GKE**, the host should point towards the External IP of the NGINX Ingress controller.
+- For **AKS**, **EKS** or **GKE**, the host should point towards the External IP of the NGINX Ingress controller.
 - For **Microk8s**, the host should be defined in `/etc/hosts` if you want to access the Sugarizer Server through your browser.
 
 **[deployment]**
@@ -216,7 +220,7 @@ Set to `none` if you intend use Sugarizer Chart independent of Sugarizer School 
 - **replicaset:** Boolean. Defines if databaseUrl is the URL of a replicaset or a single database. Set it to `true` if MongoDB replicaset chart is used. `false` if database is used without replicasets. 
 
 **[cluster]**: Not required if HTTPS is `false`. Required only if you plan to use Sugarizer Chart independent of Sugarizer School Portal (`sspNamespace` is set to `none`). 
-- **provider:** The provider on which cluster is hosted on. Options: `gke`, `azure`, `microk8s`.
+- **provider:** The provider on which cluster is hosted on. Options: `gke`, `aws`, `azure`, `microk8s`.
 
 *If the provider is `gke`:*
 - **gcpProjectId:** The Project ID of the project on Google Cloud Platform.
@@ -230,6 +234,12 @@ Set to `none` if you intend use Sugarizer Chart independent of Sugarizer School 
 - **azureDnsZoneResourceGroup:** The Resource Group that you have your DNZ Zone in.
 - **azureDnsZone:** The name of your Azure DNS Zone.
 
+*If the procider is `aws`:*
+- **awsClientSecret:**  Your AWS Secret Access Key in plain text format.
+- **awsRegion:**  The region on which your DNS Zone is hosted on.
+- **awsAccessKeyId:** Your AWS Access Key ID.
+- **awsDnsZone:** The name of your AWS DNS Zone.
+- **awsRole:** (Optional Dependency) The Role attached to your account.
 ### Install Chart Using Helm
 Go into chart directory and run:
 ```bash
