@@ -2,10 +2,10 @@
 [Helm](https://helm.sh/) Chart for setting up [Sugarizer-Server](https://github.com/llaske/sugarizer-server) deployment on a [Kubernetes](https://kubernetes.io/) cluster.
 
 ## Usage
-You can deploy multiple Sugarizer Server instances by editing the values of the YAML file and running simple `helm install` command. The Sugarizer Server instance can be accessed by the browser by opening the hostName URL. 
+You can deploy multiple Sugarizer Server instances by editing the values of the YAML file and running simple `helm install` command. The Sugarizer Server instance can be accessed by the browser by opening the `hostName` URL. 
 
 ## Provider Support
-Sugarizer Chart supports three providers:
+Sugarizer Chart supports four providers:
 - [Amazon Elastic Kubernetes Service](https://aws.amazon.com/eks/) (Amazon EKS)
 - [Azure Kubernetes Service](https://azure.microsoft.com/en-in/services/kubernetes-service/) (AKS)
 - [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) (GKE)
@@ -181,7 +181,7 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager --versi
 - **AKS:**
 You need to create a Service Principal for Azure. You can follow these [instructions](https://cert-manager.io/docs/configuration/acme/dns01/azuredns/) to create a Service Principal for Azure.
 
-**EKS:**
+- **EKS:**
 You need to use Amazon Route53 as Cloud DNS to allow certificate verification. You can follow these [instructions](https://cert-manager.io/docs/configuration/acme/dns01/route53/) to configure Route53 for AWS. 
 
 - **GKE:**
@@ -234,12 +234,13 @@ Set to `none` if you intend use Sugarizer Chart independent of Sugarizer School 
 - **azureDnsZoneResourceGroup:** The Resource Group that you have your DNZ Zone in.
 - **azureDnsZone:** The name of your Azure DNS Zone.
 
-*If the procider is `aws`:*
+*If the provider is `aws`:*
 - **awsClientSecret:**  Your AWS Secret Access Key in plain text format.
 - **awsRegion:**  The region on which your DNS Zone is hosted on.
 - **awsAccessKeyId:** Your AWS Access Key ID.
 - **awsDnsZone:** The name of your AWS DNS Zone.
 - **awsRole:** (Optional Dependency) The Role attached to your account.
+
 ### Install Chart Using Helm
 Go into chart directory and run:
 ```bash
