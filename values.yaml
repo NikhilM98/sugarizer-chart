@@ -3,6 +3,7 @@ hostName: sugarizer.tools
 deployment:
     sspNamespace: none # Set to none if you plan to use Sugarizer Chart independent of Sugarizer School Portal
     https: true # HTTPs won't work on microk8s
+    production: false # Required only if HTTPs is true. Use to switch between letsencrypt Staging and Production server. 
 database:
     databaseUrl: mymongodb
     replicaset: true
