@@ -214,6 +214,8 @@ Set to `none` if you intend use Sugarizer Chart independent of Sugarizer School 
 
 - **https:** Boolean. Set it to `true` to enable HTTPS support.
 
+- **production:** Boolean. Use to switch between letsencrypt Staging and Production server. Set it to `true` to switch to Production server.
+
 **[database]**
 - **databaseUrl:** The URL of the MongoDB database. If replicaset is used, it can be the name of your replicaset like `mymongodb` which maps to `mymongodb-mongodb-replicaset-0.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017,mymongodb-mongodb-replicaset-1.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017,mymongodb-mongodb-replicaset-2.mymongodb-mongodb-replicaset.default.svc.cluster.local:27017` in the .ini file or if a single database without replicaset is used, then it can be like `sugarizer-service-db-mymongodb.sugarizer-mymongodb.svc.cluster.local`.
 
