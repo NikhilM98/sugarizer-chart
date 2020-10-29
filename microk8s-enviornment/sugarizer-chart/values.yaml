@@ -1,4 +1,0 @@
-schoolShortName: nik-school
-hostName: sugarizer.example.com
-databaseUrl: mymongodb
-replicaset: true
