@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: sugarizer-http
-        image: nikhilm98/sugarizer-server
+        image: llaske/sugarizer-server
         volumeMounts:
         - name: env
           mountPath: "/opt/sugarizer-server/env"
