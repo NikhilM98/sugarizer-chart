@@ -1,8 +1,10 @@
-replicas: 3
-port: 27017
+replicaCount: 3
 replicaSetName: rs0
 
-persistentVolume:
+service:
+  port: 27017
+
+persistence:
   enabled: true
   ## mongodb-replicaset data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -12,7 +14,7 @@ persistentVolume:
   ##   GKE, AWS & OpenStack)
   ##
   storageClass: ""
-  accessModes:
+  accessMode:
     - ReadWriteOnce
   size: 1Gi
   annotations: {}
