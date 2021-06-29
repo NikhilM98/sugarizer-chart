@@ -18,3 +18,5 @@ persistence:
     - ReadWriteOnce
   size: 1Gi
   annotations: {}
+startupProbe:
+  successThreshold: 1
