@@ -70,12 +70,12 @@ helm repo update
 For AKS or GKE, run following command to install MongoDB-Replicaset:
 ```bash
 # mongodb/default-values.yaml is the location of the YAML file containing configuration for Amazon EKS, GKE and AKS.
-helm install mymongodb -f mongodb/default-values.yaml bitnami/mongodb
+helm install ssp-mongodb -f mongodb/default-values.yaml bitnami/mongodb
 ```
 For Microk8s, run following command to install MongoDB-Replicaset:
 ```bash
 # mongodb/default-values.yaml is the location of the YAML file containing values for Microk8s.
-helm install mymongodb -f mongodb/microk8s-values.yaml bitnami/mongodb
+helm install ssp-mongodb -f mongodb/microk8s-values.yaml bitnami/mongodb
 ```
 
 ### Install Kubernetes-Reflector
