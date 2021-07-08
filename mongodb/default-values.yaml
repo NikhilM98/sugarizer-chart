@@ -1,9 +1,14 @@
 architecture: replicaset
+useStatefulSet: true
+
 replicaCount: 3
 replicaSetName: rs0
 
 service:
   port: 27017
+
+auth:
+  enabled: false
 
 persistence:
   enabled: true
