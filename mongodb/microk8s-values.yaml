@@ -1,3 +1,4 @@
+architecture: replicaset
 replicaCount: 3
 replicaSetName: rs0
 
