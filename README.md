@@ -59,23 +59,23 @@ Metallb will ask for an IP address range. The IPs should be on the same network 
 ### Install MongoDB-Replicaset
 **Note:** Do not install if already installed during [Sugarizer School Portal Chart](https://github.com/nikhilm98/sugarizer-school-portal-chart/) setup.
 
-You can install MongoDB-Replicaset using [Bitnami/MongoDB](https://github.com/bitnami/charts/tree/master/bitnami/mongodb) Helm Chart.
+You can install MongoDB-Replicaset using [MongoDB-Replicaset](https://github.com/helm/charts/tree/master/stable/mongodb-replicaset) Helm Chart.  
 You should use the values in the [mongodb](mongodb/) directory as the values file.  
 MongoDB-Replicaset can be installed by following these commands:
 ```bash
 # Add Chart Repository
-helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 helm repo update
 ```
 For AKS or GKE, run following command to install MongoDB-Replicaset:
 ```bash
 # mongodb/default-values.yaml is the location of the YAML file containing configuration for Amazon EKS, GKE and AKS.
-helm install ssp-mongodb -f mongodb/default-values.yaml bitnami/mongodb
+helm install mymongodb -f mongodb/default-values.yaml stable/mongodb-replicaset
 ```
 For Microk8s, run following command to install MongoDB-Replicaset:
 ```bash
 # mongodb/default-values.yaml is the location of the YAML file containing values for Microk8s.
-helm install ssp-mongodb -f mongodb/microk8s-values.yaml bitnami/mongodb
+helm install mymongodb -f mongodb/microk8s-values.yaml stable/mongodb-replicaset
 ```
 
 ### Install Kubernetes-Reflector
