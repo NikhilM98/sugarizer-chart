@@ -1,11 +1,21 @@
-replicas: 3
-port: 27017
+architecture: replicaset
+useStatefulSet: true
+
+replicaCount: 3
 replicaSetName: rs0
 
-persistentVolume:
+service:
+  port: 27017
+
+auth:
+  enabled: false
+
+persistence:
   enabled: true
   storageClass: "microk8s-hostpath"
-  accessModes:
+  accessMode:
     - ReadWriteOnce
   size: 1Gi
   annotations: {}
+startupProbe:
+  successThreshold: 1
