@@ -1,5 +1,6 @@
 schoolShortName: nik-school
 hostName: sugarizer.tools
+sspserverName: Sugarizer Server
 deployment:
     sspNamespace: none # Set to none if you plan to use Sugarizer Chart independent of Sugarizer School Portal
     https: true # HTTPs won't work on microk8s
