@@ -247,7 +247,7 @@ Set to `none` if you intend use Sugarizer Chart independent of Sugarizer School 
 - **minPassSize:** The integer value for the minimum number of characters of the password.
 - **maxAge:** The maxAge is the expiration time in milliseconds of a session with the client. At the expiration of the session, the client should reenter its password. The default time is 172800000 (48 hours).
 - **maxAgeTfa:** The maxAgeTfa is the expiration time in milliseconds of a session with the client. At the expiration of the session, the client should reenter its password. The default time is 180000 (30 mins).
-- **serviceName:** The display name you wish to be displayed on authenticator app screen. The default value is School Portal, but it can be anything.
+- **serviceName:** The issuer parameter is a string value indicating the provider or service this account is associated with, URL-encoded according to [RFC 3986](http://tools.ietf.org/html/rfc3986).
 - **secret:** The JWT Secret which is used to encrypt JSON Web Token. It should be replaced with a unique value to keep the SSP Server secure.
 
 ### Install Chart Using Helm
