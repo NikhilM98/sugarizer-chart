@@ -243,6 +243,13 @@ Set to `none` if you intend use Sugarizer Chart independent of Sugarizer School 
 - **awsDnsZone:** The name of your AWS DNS Zone.
 - **awsRole:** (Optional Dependency) The Role attached to your account.
 
+**[security]**: The security parameters of your deployment. Recommended default values are provided. You can change some of them if you want to.
+- **minPassSize:** The integer value for the minimum number of characters of the password.
+- **maxAge:** The maxAge is the expiration time in milliseconds of a session with the client. At the expiration of the session, the client should reenter its password. The default time is 172800000 (48 hours).
+- **maxAgeTfa:** The maxAgeTfa is the expiration time in milliseconds of a session with the client. At the expiration of the session, the client should reenter its password. The default time is 180000 (30 mins).
+- **serviceName:** The display name you wish to be displayed on authenticator app screen. The default value is School Portal, but it can be anything.
+- **secret:** The JWT Secret which is used to encrypt JSON Web Token. It should be replaced with a unique value to keep the SSP Server secure.
+
 ### Install Chart Using Helm
 Go into chart directory and run:
 ```bash
