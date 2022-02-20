@@ -28,7 +28,7 @@ cluster: # Not required if HTTPS is false. Required only if you plan to use Suga
     awsRole: null
 security:
     minPassSize: 4
-    maxAge: 172800000
-    maxAgeTfa: 180000
+    maxAge: '172800000'
+    maxAgeTfa: '180000'
     serviceName: SchoolPortal
     secret: super.sugarizer.schoolportal.key
