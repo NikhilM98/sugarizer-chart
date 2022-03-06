@@ -32,3 +32,6 @@ security:
     maxAgeTfa: '180000'
     serviceName: SchoolPortal
     secret: super.sugarizer.schoolportal.key
+privacy:
+    consentNeed: false
+    policy: 'https://sugarizer.org/policy.html'
