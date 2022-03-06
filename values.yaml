@@ -1,5 +1,5 @@
 schoolShortName: nik-school
-hostName: 
+hostName: sugarizer.tools
 sspserverName: Sugarizer Server
 deployment:
     sspNamespace: none # Set to none if you plan to use Sugarizer Chart independent of Sugarizer School Portal
