@@ -1,5 +1,5 @@
 schoolShortName: nik-school
-hostName: sugarizer.tools
+hostName: 
 sspserverName: Sugarizer Server
 deployment:
     sspNamespace: none # Set to none if you plan to use Sugarizer Chart independent of Sugarizer School Portal
@@ -32,3 +32,6 @@ security:
     maxAgeTfa: '180000'
     serviceName: SchoolPortal
     secret: super.sugarizer.schoolportal.key
+privacy:
+    consentNeed: false
+    policy: <a href="https://sugarizer.org/policy.html">Sugarizer Policy</a>
