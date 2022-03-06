@@ -34,4 +34,4 @@ security:
     secret: super.sugarizer.schoolportal.key
 privacy:
     consentNeed: false
-    policy: <a href="https://sugarizer.org/policy.html">Sugarizer Policy</a>
+    policy: 'https://sugarizer.org/policy.html'
